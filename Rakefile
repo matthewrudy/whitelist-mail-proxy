@@ -45,7 +45,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name              = "whitelist_mail_proxy"
-  s.version           = "0.3.1"
+  s.version           = "0.3.2"
   s.summary           = "A thin proxy for Mail and ActionMailer to enable whitelisting"
   s.author            = "Matthew Rudy Jacobs"
   s.email             = "MatthewRudyJacobs@gmail.com"
