@@ -11,9 +11,15 @@ Gemfile
 
   gem "whitelist_mail_proxy"
   
+config/application.rb
+
+  # this is a hack
+  ActionMailer::Base.add_delivery_method(:whitelist_proxy, WhitelistMailProxy)
+  
 config/staging.rb
 
-  config.action_mailer.delivery_method = WhitelistMailerProxy.new(:delivery_method => Mail::SMTP.new, :regexp => /hotmail\.com/)
-
+  config.action_mailer.delivery_method = :whitelist_proxy
+  # this will use the sendmail_settings defined elsewhere, or ActionMailer's default settings
+  config.action_mailer.whitelist_proxy_settings = {:delivery_method =>:sendmail, :regexp => /@gmail\.com$/}
 
 Copyright (c) 2010 [Matthew Rudy Jacobs], released under the MIT license
