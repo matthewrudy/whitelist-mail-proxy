@@ -1,0 +1,19 @@
+WhitelistMailProxy
+==================
+
+A simple wrapper for the Mail gem / ActionMailer.
+Allow regexp based whitelisting
+
+Example
+=======
+
+Gemfile
+
+  gem "whitelist_mail_proxy"
+  
+config/staging.rb
+
+  config.action_mailer.delivery_method = WhitelistMailerProxy.new(:delivery_method => Mail::SMTP.new, :regexp => /hotmail\.com/)
+
+
+Copyright (c) 2010 [Matthew Rudy Jacobs], released under the MIT license
