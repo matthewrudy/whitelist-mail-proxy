@@ -3,6 +3,9 @@ class WhitelistMailProxy
   def initialize(options)
     @delivery_method = options[:delivery_method]
     @regexp = options[:regexp]
+    
+    raise "must have :delivery_method" unless @delivery_method
+    raise "must have :regexp" unless @regexp
   end
   attr_reader :delivery_method, :regexp
 
@@ -16,10 +19,14 @@ class WhitelistMailProxy
     end
   
     if blocked.any?
-      raise "cannot send to #{blocked.inspect}"
+      raise "cannot send to #{blocked.inspect}, whitelist is #{regexp.inspect}"
     else
       delivery_method.deliver!(mail)
     end
   end
   
+end
+
+if defined?(Rails)
+  require 'whitelist_mail_proxy/railtie'
 end
