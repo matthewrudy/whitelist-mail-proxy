@@ -33,7 +33,3 @@ class WhitelistMailProxy
   end
   
 end
-
-if defined?(Rails)
-  require 'whitelist_mail_proxy/railtie'
-end
