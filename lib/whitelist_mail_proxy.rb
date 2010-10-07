@@ -8,10 +8,6 @@ class WhitelistMailProxy
     raise "must have :regexp" unless @regexp
   end
   attr_reader :delivery_method, :regexp
-
-  def block?(string)
-    string !~ regexp
-  end
   
   def deliver!(mail)
     blocked = mail.destinations.select do |destination|
@@ -21,8 +17,19 @@ class WhitelistMailProxy
     if blocked.any?
       raise "cannot send to #{blocked.inspect}, whitelist is #{regexp.inspect}"
     else
-      delivery_method.deliver!(mail)
+      real_delivery_method.deliver!(mail)
     end
+  end
+  
+  protected
+  
+  def block?(string)
+    string !~ regexp
+  end
+  
+  def real_delivery_method
+    settings = ActionMailer::Base.send(:"#{self.delivery_method}_settings")
+    ActionMailer::Base.delivery_methods[self.delivery_method].new(settings)
   end
   
 end
