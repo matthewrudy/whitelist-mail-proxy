@@ -1,4 +1,6 @@
 class WhitelistMailProxy
+  
+  class BlockedDelivery < StandardError; end
 
   def initialize(options)
     @delivery_method = options[:delivery_method]
@@ -15,7 +17,7 @@ class WhitelistMailProxy
     end
   
     if blocked.any?
-      raise "cannot send to #{blocked.inspect}, whitelist is #{regexp.inspect}"
+      raise BlockedDelivery.new("cannot send to #{blocked.inspect}, whitelist is #{regexp.inspect}")
     else
       real_delivery_method.deliver!(mail)
     end
