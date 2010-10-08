@@ -19,7 +19,7 @@ class WhitelistMailProxy
     end
   
     if blocked.any?
-      raise BlockedDelivery.new("cannot send to #{blocked.inspect}, whitelist is #{regexp.inspect}")
+      raise BlockedDelivery.new("cannot send to #{blocked.inspect}, whitelist is #{whitelist_description}")
     else
       real_delivery_method.deliver!(mail)
     end
@@ -38,6 +38,14 @@ class WhitelistMailProxy
   
   def block_recipient?(string)
     block_by_regexp?(string) || block_by_domain?(string)
+  end
+  
+  def whitelist_description
+    bits = []
+    bits << "addresses LIKE #{regexp.inspect}" if self.regexp
+    bits << "domains IN #{domains.inspect}"    if self.domains
+  
+    bits.join(" OR ")
   end
   
   protected
