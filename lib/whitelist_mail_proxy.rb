@@ -23,6 +23,13 @@ class WhitelistMailProxy
     end
   end
   
+  # eg.
+  #  "Matthew Rudy Jacobs"<matthewrudyjacobs@gmail.com>
+  #  matthewrudyjacobs@gmail.com
+  def self.extract_email_address(recipient)
+    recipient.split("<").last.gsub(/>$/, "").strip
+  end
+  
   protected
   
   def block?(string)
