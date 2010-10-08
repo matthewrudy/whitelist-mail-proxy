@@ -1,19 +1,21 @@
 class WhitelistMailProxy
   
   class BlockedDelivery < StandardError; end
+  class SettingsError < ArgumentError ; end
 
   def initialize(options)
     @delivery_method = options[:delivery_method]
     @regexp = options[:regexp]
+    @domains = options[:domain] && Array(options[:domain])
     
-    raise "must have :delivery_method" unless @delivery_method
-    raise "must have :regexp" unless @regexp
+    raise SettingsError, "you must specify config.action_mailer.whitelist_proxy_settings to contain a :delivery_method"   unless @delivery_method
+    raise SettingsError, "you must specify config.action_mailer.whitelist_proxy_settings to contain a :regexp or :domain" unless @regexp || @domains
   end
-  attr_reader :delivery_method, :regexp
+  attr_reader :delivery_method, :regexp, :domains
   
   def deliver!(mail)
     blocked = mail.destinations.select do |destination|
-      block?(destination)
+      block_recipient?(destination)
     end
   
     if blocked.any?
@@ -30,10 +32,22 @@ class WhitelistMailProxy
     recipient.split("<").last.gsub(/>$/, "").strip
   end
   
+  def self.extract_email_domain(recipient)
+    extract_email_address(recipient).split("@").last
+  end
+  
+  def block_recipient?(string)
+    block_by_regexp?(string) || block_by_domain?(string)
+  end
+  
   protected
   
-  def block?(string)
-    string !~ regexp
+  def block_by_regexp?(string)
+    string !~ regexp if self.regexp
+  end
+  
+  def block_by_domain?(string)
+    !self.domains.include?(self.class.extract_email_domain(string)) if self.domains
   end
   
   def real_delivery_method
