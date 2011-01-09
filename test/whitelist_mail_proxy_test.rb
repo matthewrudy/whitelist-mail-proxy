@@ -4,39 +4,39 @@ require File.dirname(__FILE__)+"/../lib/whitelist_mail_proxy"
 class WhitelistMailProxyTest < ActiveSupport::TestCase
   
   test "extract_email_address - just an email" do
-    assert_extracted "matthew@thought-sauce.com", "matthew@thought-sauce.com"
+    assert_extracted "murple@murple.com", "murple@murple.com"
   end
   
   test "extract_email_address - with a trailing space" do
-    assert_extracted "matthew@thought-sauce.com", "matthew@thought-sauce.com  "
+    assert_extracted "murple@murple.com", "murple@murple.com  "
   end
   
   test "extract_email_address - with some magic" do
-    assert_extracted "matthewRudyJacobs+somemagic@gmail.com", "matthewRudyJacobs+somemagic@gmail.com"
+    assert_extracted "murple+somemagic@murple.com", "murple+somemagic@murple.com"
   end
   
   test "extract_email_address - with a quoted name" do
-    full = %("Hyatt, Matthew" <MatthewHyatt@computerpeople.co.uk>)
-    assert_extracted "MatthewHyatt@computerpeople.co.uk", full
+    full = %("Purple Murple" <murple@murple.com>)
+    assert_extracted "murple@murple.com", full
   end
   
   test "extract_email_address - with a non-quoted name" do
-    full = %(Hyatt, Matthew <MatthewHyatt@computerpeople.co.uk>)
-    assert_extracted "MatthewHyatt@computerpeople.co.uk", full
+    full = %(Purple Murple <murple@murple.com>)
+    assert_extracted "murple@murple.com", full
   end
   
   test "extract_email_address - without a space between the name and email" do
-    full = %("Hyatt, Matthew"<MatthewHyatt@computerpeople.co.uk>)
-    assert_extracted "MatthewHyatt@computerpeople.co.uk", full
+    full = %("Purple Murple"<murple@murple.com>)
+    assert_extracted "murple@murple.com", full
   end
   
   test "extract_email_domain" do
-    assert_domain "thought-sauce.com", "matthew@thought-sauce.com"
+    assert_domain "murple.com", "murple@murple.com"
   end
   
   test "extract_email_domain - with quoted name" do
-    full = %("Hyatt, Matthew" <MatthewHyatt@computerpeople.co.uk>)
-    assert_domain "computerpeople.co.uk", full
+    full = %("Purple Murple" <murple@murple.com>)
+    assert_domain "murple.com", full
   end
   
   test "block_recipient - by regexp" do
@@ -53,34 +53,34 @@ class WhitelistMailProxyTest < ActiveSupport::TestCase
   end
   
   test "block_recipient - by single domain" do
-    @proxy = WhitelistMailProxy.new(:delivery_method => :test, :domain => "computerpeople.co.uk")
+    @proxy = WhitelistMailProxy.new(:delivery_method => :test, :domain => "murple.com")
     
     # matching the domain
-    assert !@proxy.block_recipient?("MatthewHyatt@computerpeople.co.uk")
-    assert  @proxy.block_recipient?("MatthewHyatt@computerpurple.co.uk")
+    assert !@proxy.block_recipient?("murple@murple.com")
+    assert  @proxy.block_recipient?("murple@murpoo.com")
     
     # regardless of name
-    assert !@proxy.block_recipient?(%("Hyatt, Matthew" <MatthewHyatt@computerpeople.co.uk>))
-    assert  @proxy.block_recipient?(%("Hyatt, Matthew" <MatthewHyatt@computerpurple.co.uk>))
+    assert !@proxy.block_recipient?(%("Purple Murple" <murple@murple.com>))
+    assert  @proxy.block_recipient?(%("Purple Murple" <murple@murpoo.com>))
   end
   
   test "block_recipient - multiple domains" do
-    @proxy = WhitelistMailProxy.new(:delivery_method => :test, :domain => ["computerpeople.co.uk", "computerpurple.co.uk"])
+    @proxy = WhitelistMailProxy.new(:delivery_method => :test, :domain => ["murple.com", "murpoo.com"])
     
     # matching the domain
-    assert !@proxy.block_recipient?("MatthewHyatt@computerpeople.co.uk")
-    assert !@proxy.block_recipient?("MatthewHyatt@computerpurple.co.uk")
-    assert  @proxy.block_recipient?("MatthewHyatt@somethingelse.co.uk")
+    assert !@proxy.block_recipient?("murple@murple.com")
+    assert !@proxy.block_recipient?("murple@murpoo.com")
+    assert  @proxy.block_recipient?("murple@somethingelse.com")
     
     # regardless of name
-    assert !@proxy.block_recipient?(%("Hyatt, Matthew" <MatthewHyatt@computerpeople.co.uk>))
-    assert !@proxy.block_recipient?(%("Hyatt, Matthew" <MatthewHyatt@computerpurple.co.uk>))
-    assert  @proxy.block_recipient?(%("Hyatt, Matthew" <MatthewHyatt@somethingelse.co.uk>))
+    assert !@proxy.block_recipient?(%("Purple Murple" <murple@murple.com>))
+    assert !@proxy.block_recipient?(%("Purple Murple" <murple@murpoo.com>))
+    assert  @proxy.block_recipient?(%("Purple Murple" <murple@somethingelse.com>))
   end
   
   test "raises an exception if not given a delivery method" do
     assert_raise(WhitelistMailProxy::SettingsError) do
-      WhitelistMailProxy.new(:domain => ["computerpeople.co.uk", "computerpurple.co.uk"])
+      WhitelistMailProxy.new(:domain => ["murple.com", "murpoo.com"])
     end
   end
   
