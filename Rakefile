@@ -22,19 +22,8 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require "rubygems"
 require "rake/gempackagetask"
-require "rake/rdoctask"
 
-require "rake/testtask"
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList["test/**/*_test.rb"]
-  t.verbose = true
-end
-
-
-task :default => ["test"]
 
 # This builds the actual gem. For details of what all these options
 # mean, and other ones you can add, check the documentation here:
