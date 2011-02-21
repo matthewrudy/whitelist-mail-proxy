@@ -34,7 +34,7 @@ spec = Gem::Specification.new do |s|
 
   # Change these as appropriate
   s.name              = "whitelist_mail_proxy"
-  s.version           = "0.4.2"
+  s.version           = "0.5.0"
   s.summary           = "A thin proxy for Mail and ActionMailer to enable whitelisting"
   s.author            = "Matthew Rudy Jacobs"
   s.email             = "MatthewRudyJacobs@gmail.com"
@@ -50,7 +50,7 @@ spec = Gem::Specification.new do |s|
 
   # If you want to depend on other gems, add them here, along with any
   # relevant versions
-  # s.add_dependency("some_other_gem", "~> 0.1.0")
+  s.add_dependency("actionmailer") # I don't know the right version to require
 
   # If your tests use any gems, include them here
   # s.add_development_dependency("mocha") # for example
@@ -74,13 +74,6 @@ task :gemspec do
 end
 
 task :package => :gemspec
-
-# Generate documentation
-Rake::RDocTask.new do |rd|
-  rd.main = "README"
-  rd.rdoc_files.include("README", "lib/**/*.rb")
-  rd.rdoc_dir = "rdoc"
-end
 
 desc 'Clear out RDoc and generated packages'
 task :clean => [:clobber_rdoc, :clobber_package] do

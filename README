@@ -11,11 +11,6 @@ Gemfile
 
   gem "whitelist_mail_proxy"
   
-config/application.rb
-
-  # this is a hack
-  ActionMailer::Base.add_delivery_method(:whitelist_proxy, WhitelistMailProxy)
-  
 config/staging.rb
 
   config.action_mailer.delivery_method = :whitelist_proxy
@@ -31,6 +26,4 @@ or if you want multiple domains
   config.action_mailer.whitelist_proxy_settings = {:delivery_method =>:sendmail, :domain => ["gmail.com", "hotmail.com"]
 
 
-  
-
-Copyright (c) 2010 [Matthew Rudy Jacobs], released under the MIT license
+Copyright (c) 2010-2011 [Matthew Rudy Jacobs], released under the MIT license
