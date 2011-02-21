@@ -1,3 +1,5 @@
+require 'action_mailer'
+
 class WhitelistMailProxy
   
   class BlockedDelivery < StandardError; end
@@ -64,3 +66,5 @@ class WhitelistMailProxy
   end
   
 end
+# this is the whole reason we're doing this
+ActionMailer::Base.add_delivery_method(:whitelist_proxy, WhitelistMailProxy)

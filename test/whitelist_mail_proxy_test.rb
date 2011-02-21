@@ -101,4 +101,9 @@ class WhitelistMailProxyTest < ActiveSupport::TestCase
     assert_equal domain, WhitelistMailProxy.extract_email_domain(full)
   end
   
+  test "actionmailer should have the delivery method added" do
+    assert_equal WhitelistMailProxy, ActionMailer::Base.delivery_methods[:whitelist_proxy]
+    assert_equal Hash.new, ActionMailer::Base.whitelist_proxy_settings
+  end
+  
 end
