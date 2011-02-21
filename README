@@ -14,16 +14,26 @@ Gemfile
 config/staging.rb
 
   config.action_mailer.delivery_method = :whitelist_proxy
+  
   # this will use the sendmail_settings defined elsewhere, or ActionMailer's default settings
-  config.action_mailer.whitelist_proxy_settings = {:delivery_method =>:sendmail, :regexp => /test@/}
+  config.action_mailer.whitelist_proxy_settings = {:
+    delivery_method =>:sendmail,
+    :regexp => /test@/,
+    }
   
 or if you want a specific domain
 
-  config.action_mailer.whitelist_proxy_settings = {:delivery_method =>:sendmail, :domain => "gmail.com"
+  config.action_mailer.whitelist_proxy_settings = {
+    :delivery_method => :sendmail,
+    :domain => "gmail.com",
+    }
   
 or if you want multiple domains
 
-  config.action_mailer.whitelist_proxy_settings = {:delivery_method =>:sendmail, :domain => ["gmail.com", "hotmail.com"]
+  config.action_mailer.whitelist_proxy_settings = {
+    :delivery_method =>:sendmail,
+    :domain => ["gmail.com", "hotmail.com"],
+    }
 
 
 Copyright (c) 2010-2011 [Matthew Rudy Jacobs], released under the MIT license
